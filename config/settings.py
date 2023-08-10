@@ -41,10 +41,12 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    "rest_framework",
+    "config",
     "api",
     "backend",
-    "debug_toolbar",
+    "rest_framework",
+    "drf_yasg",
+    # "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -57,7 +59,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+# MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
 INTERNAL_IPS = ["127.0.0.1"]
 
