@@ -1,8 +1,26 @@
 from rest_framework import serializers
-from .models import Team
+from .models import PlayerTeam, Curator, Station, Task
 
 
-class TeamSerializer(serializers.ModelSerializer):
+class PlayerTeamSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Team
-        fields = ("id", "name")
+        model = PlayerTeam
+        fields = "__all__"
+
+
+class CuratorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Curator
+        fields = "__all__"
+
+
+class StationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Station
+        fields = "__all__"
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = "__all__"
