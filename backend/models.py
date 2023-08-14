@@ -1,20 +1,21 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 
 class PlayerTeam(models.Model):
-    # user = models.OneToOneField(AbstractUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     teamname = models.CharField(max_length=100, blank=True, null=True)
     password = models.CharField(max_length=100, blank=True, null=True)
+    score = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.teamname
 
 
 class Curator(models.Model):
-    # user = models.OneToOneField(AbstractUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
     password = models.CharField(max_length=100, blank=False, null=False)
 
