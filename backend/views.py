@@ -1,25 +1,28 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .models import PlayerTeam, Curator, Station, Task
+from rest_framework.response import Response
 
+from .models import Curator, PlayerTeam, Station, Task
 from .serializers import (
-    PlayerTeamSerializer,
     CuratorSerializer,
+    PlayerTeamSerializer,
     StationSerializer,
     TaskSerializer,
 )
-
-
-# class TeamViewSet(viewsets.ModelViewSet):
-#     permission_classes = [IsAuthenticated]
-#     queryset = Team.objects.all()
-#     serializer_class = TeamSerializer
 
 
 class PlayerTeamViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = PlayerTeam.objects.all()
     serializer_class = PlayerTeamSerializer
+
+    @action(detail=True, methods=["post"])
+    def add_score(self, request, pk=None):
+        team = self.get_object()
+        team.score += request.data["score"]
+        team.save()
+        return Response({"score": team.score})
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
