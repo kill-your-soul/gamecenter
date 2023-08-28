@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+import random
 
 from .models import Curator, PlayerTeam, Station, Task
 from .serializers import (
@@ -23,6 +24,15 @@ class PlayerTeamViewSet(viewsets.ModelViewSet):
         team.score += request.data["score"]
         team.save()
         return Response({"score": team.score})
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=False)
+        all_stations = Station.objects.all()
+        random_stations = random.sample(list(all_stations), 10)
+        random.shuffle(random_stations)
+
+        serializer.save(stations=random_stations)
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
