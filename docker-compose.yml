@@ -1,0 +1,9 @@
+version: '1'
+
+services:
+  web:
+    build: .
+    container_name: ic
+    command: python3 manage.py runserver
+    volumes:
+      - .:/app

@@ -14,6 +14,7 @@ from .serializers import (
 
 
 class PlayerTeamViewSet(viewsets.ModelViewSet):
+    # TODO: add 3 top commands
     permission_classes = [IsAuthenticated]
     queryset = PlayerTeam.objects.all()
     serializer_class = PlayerTeamSerializer
