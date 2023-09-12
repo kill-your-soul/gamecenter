@@ -1,42 +1,25 @@
-version: '3'
+version: "3.9"
 
 services:
-  app:
-    build: 
-      context: .
+  db:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  web:
+    build: .
+    command: python /app/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
       - 8000:8000
     depends_on:
-      - minio
-    environment:
-      - SECRET_KEY=123
-    command: >
-      sh -c "python3 manage.py runserver"
-
-# TODO: add postgresql
-
-  # minio:
-  #   image: minio/minio
-  #   ports:
-  #     - 9000:9000
-  #   environment:
-  #     - MINIO_ACCESS_KEY=123123
-  #     - MINIO_SECRET_KEY=123123123
-  #   command: server /images
+      - db
   
-  # createbuckets:
-  #   image: minio/mc
-  #   depends_on:
-  #     - minio
 
-  #   entrypoint: >
-  #     /bin/sh -c "
-  #     apk add nc &&
-  #     while ! nc -z minio 9000; do echo 'Wait minio to startup...' && sleep 0.1; done; sleep 5 &&
-  #     /usr/bin/mc config host add myminio http://minio:9000 access-key secret-key;
-  #     /usr/bin/mc mb myminio/my-local-bucket;
-  #     /usr/bin/mc policy download myminio/my-local-bucket;
-  #     exit 0;
-  #     "      
+volumes:
+  postgres_data:

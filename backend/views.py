@@ -2,15 +2,23 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 import random
 
-from .models import Curator, PlayerTeam, Station, Task
+from .models import Curator, PlayerTeam, Station, Task, StationOrder
 from .serializers import (
     CuratorSerializer,
     PlayerTeamSerializer,
     StationSerializer,
     TaskSerializer,
+    StationOrderSerializer,
 )
+
+
+class StationOrderViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = StationOrder.objects.all()
+    serializer_class = StationOrderSerializer
 
 
 class PlayerTeamViewSet(viewsets.ModelViewSet):
@@ -36,17 +44,31 @@ class PlayerTeamViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=False)
-        all_stations = Station.objects.all()
-        random_stations = random.sample(list(all_stations), 2)
-        random.shuffle(random_stations)
-        station_order = [station.id for station in random_stations]
 
-        print(random_stations[0])
-        print(random_stations)
-        serializer.save(stations=station_order, current_station=random_stations[0])
-        print(serializer.data)
-        return Response(serializer.data)
+        if serializer.is_valid(raise_exception=False):
+            all_stations = Station.objects.all()
+            random_stations = random.sample(list(all_stations), 3)
+            random.shuffle(random_stations)
+
+            station_order = StationOrder.objects.create(
+                first=random_stations[0],
+                second=random_stations[1],
+                third=random_stations[2],
+            )
+            player_team = PlayerTeam.objects.create(
+                user=request.user,
+                teamname=request.data["teamname"],
+                stations=station_order,
+                current_station=random_stations[0],
+            )
+
+            # for order, station in enumerate(random_stations):
+            #     player_team.stations.add(station, through_defaults={'order': order})
+
+            player_team.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CuratorViewSet(viewsets.ModelViewSet):

@@ -1,10 +1,21 @@
-FROM python:3.10.11
+FROM python:3.10 as builder
 
 WORKDIR /app
-COPY . /app/
-RUN pip install -r requirements.txt
-ENV SECRET_KEY=123
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
-# ENTRYPOINT ["python3"] 
-CMD ["python3", "manage.py", "runserver"]
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc libpq-dev
+
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+
+FROM python:3.10-slim-buster
+
+WORKDIR /app
+RUN apt-get update && \
+    apt-get install -y libpq-dev
+RUN mkdir -p /home/app
+COPY --from=builder /app/wheels /app/wheels
+COPY --from=builder /app/requirements.txt .
+RUN pip install --upgrade pip 
+RUN pip install --no-cache /app/wheels/*
