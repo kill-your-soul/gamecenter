@@ -7,6 +7,9 @@ Site for event GameCenter
 1. [Git](https://git-scm.com/)
 2. [Python 3.8+](https://www.python.org/downloads/)
 
+## Documentation
+1. [API](./API.md)
+
 ## Installation
 
 1. Clone the repository
