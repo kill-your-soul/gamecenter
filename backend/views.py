@@ -116,7 +116,7 @@ class UserApiViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=["get"])
-    def get_user(request):
+    def get_user(self, request):
         # logger.warning(request.headers["Authorization"].split(" ")[1])
         access_token = AccessToken(request.headers["Authorization"].split(" ")[1])
         # logger.warning(access_token)
