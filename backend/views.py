@@ -119,6 +119,28 @@ class UserApiViewSet(viewsets.ViewSet):
     def get_user(self, request):
         # logger.warning(request.headers["Authorization"].split(" ")[1])
         access_token = AccessToken(request.headers["Authorization"].split(" ")[1])
+        try:
+            pt = PlayerTeam.objects.get(user=access_token.payload["user_id"])
+            logger.warning(pt)
+        except:
+            resp = Response(
+                {
+                    "user_id": access_token.payload["user_id"],
+                    "is_curator": True,
+                    "is_player": False,
+                }
+            )
+        try:
+            cur = Curator.objects.get(user=access_token.payload["user_id"])
+            logger.warning(cur)
+        except:
+            resp = Response(
+                {
+                    "user_id": access_token.payload["user_id"],
+                    "is_curator": False,
+                    "is_player": True,
+                }
+            )
         # logger.warning(access_token)
         logger.warning(access_token.payload["user_id"])
-        return Response({"user_id": access_token.payload["user_id"]})
+        return resp
