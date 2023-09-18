@@ -97,3 +97,17 @@ Site for event GameCenter
         ```shell
         python3 manage.py runserver
         ```
+
+## Docker compose 
+
+```shell
+docker-compose up -d --build
+```
+
+```shell
+docker-compose exec web python manage.py makemigrations
+```
+
+```shell 
+docker-compose exec web python manage.py migrate --noinput
+```
