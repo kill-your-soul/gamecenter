@@ -3,6 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+
+# import apivewsset
+
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.models import User
 import random
 import logging
 
@@ -105,3 +110,15 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+
+class UserApiViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=["get"])
+    def get_user(request):
+        # logger.warning(request.headers["Authorization"].split(" ")[1])
+        access_token = AccessToken(request.headers["Authorization"].split(" ")[1])
+        # logger.warning(access_token)
+        logger.warning(access_token.payload["user_id"])
+        return Response({"user_id": access_token.payload["user_id"]})

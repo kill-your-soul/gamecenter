@@ -7,9 +7,11 @@ from .views import (
     StationViewSet,
     TaskViewSet,
     StationOrderViewSet,
+    UserApiViewSet,
 )
 
 router = routers.DefaultRouter()
+router.register(r"user", UserApiViewSet, basename="user")
 router.register(r"playerteam", PlayerTeamViewSet, basename="playerteam")
 router.register(r"curator", CuratorViewSet, basename="curator")
 router.register(r"station", StationViewSet, basename="station")
