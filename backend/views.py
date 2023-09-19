@@ -39,9 +39,10 @@ class PlayerTeamViewSet(viewsets.ModelViewSet):
         print(request.data)
         team = self.get_object()
         team.score += request.data["score"]
+        team.current_station += 1
         # team.current_station = team.stations.
         team.save()
-        return Response({"score": team.score})
+        return Response({"score": team.score, "current_station": team.current_station})
 
     @action(detail=True, methods=["post"])
     def set_current_station(self, request, pk=None):

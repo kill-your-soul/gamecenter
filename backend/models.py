@@ -104,13 +104,14 @@ class PlayerTeam(models.Model):
     stations = models.ForeignKey(
         "StationOrder", on_delete=models.CASCADE, blank=True, null=True
     )
-    current_station = models.ForeignKey(
-        "Station",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="current_station",
-    )
+    # current_station = models.ForeignKey(
+    #     "Station",
+    #     on_delete=models.CASCADE,
+    #     blank=True,
+    #     null=True,
+    #     related_name="current_station",
+    # )
+    current_station = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.teamname
