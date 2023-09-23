@@ -1,6 +1,6 @@
 FROM python:3.10 as builder
 
-WORKDIR /app
+WORKDIR /build
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc libpq-dev
@@ -15,7 +15,7 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y libpq-dev
 RUN mkdir -p /home/app
-COPY --from=builder /app/wheels /app/wheels
-COPY --from=builder /app/requirements.txt .
+COPY --from=builder /build/wheels /app/wheels
+COPY --from=builder /build/requirements.txt .
 RUN pip install --upgrade pip 
 RUN pip install --no-cache /app/wheels/*
